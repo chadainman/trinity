@@ -225,6 +225,12 @@ services:
     cap_add:
       - NET_BIND_SERVICE
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --server-response http://127.0.0.1:8080/mcp 2>&1 | grep -q 'HTTP/' || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
   # Scheduler - dedicated service for cron-based agent task execution
   # Prevents duplicate executions that occurred with multiple backend workers
